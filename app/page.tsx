@@ -11,7 +11,7 @@ import { topics } from '@/public/data/prompt'
 
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState('Weather')
+  const [activeTab, setActiveTab] = useState('Ratting')
   const [inputs, setInputs] = useState(['', ''])
   const [result, setResult] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
