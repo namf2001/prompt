@@ -1,101 +1,123 @@
-import Image from "next/image";
+'use client'
+
+import { useState } from 'react'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
+const topics = [
+  {
+    name: 'Weather',
+    template: 'thời tiết tại {input1} vào lúc {input2} là như thế nào',
+    placeholders: ['Enter location', 'Enter time']
+  },
+  {
+    name: 'Personal Info',
+    template: 'tên của bạn là {input1} và bạn sinh năm {input2}',
+    placeholders: ['Enter name', 'Enter birth year']
+  },
+  {
+    name: 'Description',
+    template: '{input1} là một người {input2}',
+    placeholders: ['Enter name', 'Enter description']
+  }
+]
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [activeTab, setActiveTab] = useState('Weather')
+  const [inputs, setInputs] = useState(['', ''])
+  const [result, setResult] = useState('')
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  const combineStrings = () => {
+    const topic = topics.find(t => t.name === activeTab)
+    if (!topic) return
+
+    let combined = topic.template
+    inputs.forEach((input, index) => {
+      combined = combined.replace(`{input${index + 1}}`, input)
+    })
+    setResult(combined)
+  }
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(result)
+      toast.success('Copied to clipboard!', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      })
+    } catch {
+      toast.error('Failed to copy text', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      })
+    }
+  }
+
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-center p-24">
+      <div className="w-full max-w-md space-y-4">
+        <h1 className="text-2xl font-bold text-center">String Combiner</h1>
+        <Tabs defaultValue="Weather" onValueChange={(value) => {
+          setActiveTab(value)
+          setInputs(['', ''])
+          setResult('')
+        }}>
+          <TabsList className="grid w-full grid-cols-3">
+            {topics.map((topic) => (
+              <TabsTrigger key={topic.name} value={topic.name}>
+                {topic.name}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          {topics.map((topic) => (
+            <TabsContent key={topic.name} value={topic.name}>
+              {topic.placeholders.map((placeholder, index) => (
+                <Textarea
+                  key={index}
+                  placeholder={placeholder}
+                  value={inputs[index]}
+                  onChange={(e) => {
+                    const newInputs = [...inputs]
+                    newInputs[index] = e.target.value
+                    setInputs(newInputs)
+                  }}
+                  className="mb-4"
+                />
+              ))}
+            </TabsContent>
+          ))}
+        </Tabs>
+        <Button onClick={combineStrings} className="w-full">
+          Combine
+        </Button>
+        {result && (
+          <Button
+            className="mt-4 p-4 bg-gray-100 rounded-md cursor-pointer hover:bg-gray-200 transition-colors"
+            onClick={copyToClipboard}
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                copyToClipboard()
+              }
+            }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+            <h2 className="font-semibold mb-2">Result (Click to copy):</h2>
+            <p>{result}</p>
+          </Button>
+        )}
+      </div>
+      <ToastContainer />
+    </main>
+  )
 }
