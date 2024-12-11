@@ -6,29 +6,18 @@ import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { topics } from '@/public/data/prompt'
 
-const topics = [
-  {
-    name: 'Weather',
-    template: 'thời tiết tại {input1} vào lúc {input2} là như thế nào',
-    placeholders: ['Enter location', 'Enter time']
-  },
-  {
-    name: 'Personal Info',
-    template: 'tên của bạn là {input1} và bạn sinh năm {input2}',
-    placeholders: ['Enter name', 'Enter birth year']
-  },
-  {
-    name: 'Description',
-    template: '{input1} là một người {input2}',
-    placeholders: ['Enter name', 'Enter description']
-  }
-]
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('Weather')
   const [inputs, setInputs] = useState(['', ''])
   const [result, setResult] = useState('')
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [editableResult, setEditableResult] = useState('')
+
+  console.log(result)
 
   const combineStrings = () => {
     const topic = topics.find(t => t.name === activeTab)
@@ -39,11 +28,13 @@ export default function Home() {
       combined = combined.replace(`{input${index + 1}}`, input)
     })
     setResult(combined)
+    setEditableResult(combined)
+    setIsModalOpen(true)
   }
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(result)
+      await navigator.clipboard.writeText(editableResult)
       toast.success('Copied to clipboard!', {
         position: "top-right",
         autoClose: 2000,
@@ -101,23 +92,31 @@ export default function Home() {
         <Button onClick={combineStrings} className="w-full">
           Combine
         </Button>
-        {result && (
-          <Button
-            className="mt-4 p-4 bg-gray-100 rounded-md cursor-pointer hover:bg-gray-200 transition-colors"
-            onClick={copyToClipboard}
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                copyToClipboard()
-              }
-            }}
-          >
-            <h2 className="font-semibold mb-2">Result (Click to copy):</h2>
-            <p>{result}</p>
-          </Button>
-        )}
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+          <DialogContent className="sm:max-w-[90vw] h-[90vh] flex flex-col gap-2 justify-between">
+            <h1 className='font-bold'>Result</h1>
+            <Textarea
+              value={editableResult}
+              onChange={(e) => setEditableResult(e.target.value)}
+              className="flex-1 text-sm"
+            />
+            <div className='flex gap-2 w-full '>
+              <Button
+                className='w-full'
+                onClick={() => setIsModalOpen(false)}>Close</Button>
+              <Button
+                variant="outline"
+                className='w-full'
+                onClick={copyToClipboard}
+              >
+                Copy
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
       <ToastContainer />
     </main>
   )
 }
+
