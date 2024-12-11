@@ -17,8 +17,7 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editableResult, setEditableResult] = useState('')
 
-  console.log(result)
-
+  console.log(result, activeTab)
   const combineStrings = () => {
     const topic = topics.find(t => t.name === activeTab)
     if (!topic) return
@@ -59,7 +58,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
       <div className="w-full max-w-md space-y-4">
         <h1 className="text-2xl font-bold text-center">String Combiner</h1>
-        <Tabs defaultValue="Weather" onValueChange={(value) => {
+        <Tabs defaultValue="Ratting" onValueChange={(value) => {
           setActiveTab(value)
           setInputs(['', ''])
           setResult('')
