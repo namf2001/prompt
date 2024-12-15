@@ -4,20 +4,18 @@ import { useState } from 'react'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { toast, ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { topics } from '@/public/data/prompt'
+import { useToast } from "@/hooks/use-toast"
 
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('Ratting')
+  const { toast } = useToast()
   const [inputs, setInputs] = useState(['', ''])
-  const [result, setResult] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editableResult, setEditableResult] = useState('')
 
-  console.log(result, activeTab)
   const combineStrings = () => {
     const topic = topics.find(t => t.name === activeTab)
     if (!topic) return
@@ -26,7 +24,6 @@ export default function Home() {
     inputs.forEach((input, index) => {
       combined = combined.replace(`{input${index + 1}}`, input)
     })
-    setResult(combined)
     setEditableResult(combined)
     setIsModalOpen(true)
   }
@@ -34,22 +31,15 @@ export default function Home() {
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(editableResult)
-      toast.success('Copied to clipboard!', {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
+      toast({
+        title: "Copied to clipboard",
+        description: "The result has been copied to your clipboard.",
       })
     } catch {
-      toast.error('Failed to copy text', {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem with your request.",
       })
     }
   }
@@ -61,7 +51,6 @@ export default function Home() {
         <Tabs defaultValue="Ratting" onValueChange={(value) => {
           setActiveTab(value)
           setInputs(['', ''])
-          setResult('')
         }}>
           <TabsList className="grid w-full grid-cols-3">
             {topics.map((topic) => (
@@ -114,7 +103,6 @@ export default function Home() {
           </DialogContent>
         </Dialog>
       </div>
-      <ToastContainer />
     </main>
   )
 }
