@@ -10,7 +10,9 @@ export const topics = [
         - Write this in a way that feels natural, like a regular person expressing their thoughts casually
         - Avoid overly complex or repetitive phrasing. Keep it simple and relatable.
         - Use varied sentence lengths and a conversational tone to make it feel spontaneous and genuine.
-
+        - Use simple words and phrases to make it easy to understand and relatable to a wide audience.
+        - Limit 20 words per sentence to keep it concise and engaging.
+        
         ### This is my prompt_input:
         \`{input1}\`
 
@@ -54,13 +56,9 @@ export const topics = [
         placeholders: ['Enter user_prompt', 'Enter model_response']
     },
     {
-        name: 'Ranking',
-        template: 'tên của bạn là {input1} và bạn sinh năm {input2}',
+        name: 'Create Prompt',
+        template: ``,
         placeholders: ['Enter name', 'Enter birth year']
     },
-    {
-        name: 'Description',
-        template: '{input1} là một người {input2}',
-        placeholders: ['Enter name', 'Enter description']
-    }
 ];
+
