@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast"
 
 
 export default function FormPrompt() {
-    const [activeTab, setActiveTab] = useState('Ratting')
+    const [activeTab, setActiveTab] = useState('Hopper')
     const { toast } = useToast()
     const [inputs, setInputs] = useState(['', ''])
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -47,7 +47,7 @@ export default function FormPrompt() {
     return (
         <div className="w-full h-full  max-w-md space-y-4 flex flex-col justify-around">
             <h1 className="text-2xl font-bold text-center">String Combiner</h1>
-            <Tabs defaultValue="Ratting" onValueChange={(value) => {
+            <Tabs defaultValue="Hopper" onValueChange={(value) => {
                 setActiveTab(value)
                 setInputs(['', ''])
             }}>
