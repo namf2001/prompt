@@ -45,7 +45,7 @@ export default function FormPrompt() {
     }
 
     return (
-        <div className="w-full max-w-md space-y-4">
+        <div className="w-full h-full  max-w-md space-y-4 flex flex-col justify-around">
             <h1 className="text-2xl font-bold text-center">String Combiner</h1>
             <Tabs defaultValue="Ratting" onValueChange={(value) => {
                 setActiveTab(value)
@@ -70,7 +70,8 @@ export default function FormPrompt() {
                                     newInputs[index] = e.target.value
                                     setInputs(newInputs)
                                 }}
-                                className="mb-4"
+                                className="mb-4 flex-1 bg-white"
+                                rows={7}
                             />
                         ))}
                     </TabsContent>

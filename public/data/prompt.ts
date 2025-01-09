@@ -1,6 +1,6 @@
 export const topics = [
     {
-        name: 'Ratting',
+        name: 'Hopper',
         template: `
         ## Context
 
@@ -56,9 +56,63 @@ export const topics = [
         placeholders: ['Enter user_prompt', 'Enter model_response']
     },
     {
-        name: 'Create Prompt',
-        template: ``,
-        placeholders: ['Enter name', 'Enter birth year']
+        name: 'Cypher Project',
+        template: `
+        ## Context
+
+        You are an evaluator of the output quality of LLM models, based on the information provided including: prompt_input, model response, criteria list. For each evaluation criterion, you need to classify which type the model_response belongs to, briefly but to the point explain why you made that choice.
+
+        ### IMPORTANT NOTE THAT YOU NEED TO FOLLOW:
+        - Write this in a way that feels natural, like a regular person expressing their thoughts casually
+        - Avoid overly complex or repetitive phrasing. Keep it simple and relatable.
+        - Use varied sentence lengths and a conversational tone to make it feel spontaneous and genuine.
+        - Use simple words and phrases to make it easy to understand and relatable to a wide audience.
+        - Limit 20 words per sentence to keep it concise and engaging.
+        
+        ### This is my prompt_input:
+        \`{input1}\`
+
+        ### This is the model response:
+        \`{input2}\`
+
+        ### This is criteria list:
+
+        #### 1. Instruction Following
+        - **[1] Major Issue(s)**: The response ignores, circumvents, or violates key components of the prompt, rendering the response unhelpful to the user. The response punts unnecessarily on a non-safety related issue.
+        - **[2] Minor Issue(s)**: Response follows most of the instructions from the prompt, satisfying the user’s primary intent, but misses certain elements.
+        - **[3] No Issues**:Response completely follows all instructions from the prompt, fully respecting the user’s prompt.
+
+        #### 2. Writing Quality
+        - **[1] Major Issue(s)**: 
+            Grammar - Contains significant spelling or grammar mistakes (3+).
+            Fluency - The writing is clearly non-fluent and sounds like a non-native language speaker.
+            Tone - Completely misaligned with the prompt’s register and tone; unnatural or not conversational.
+            Structure - Tables are not present where applicable.
+            Visual Presentation - There is no visual separation between ideas; distinct ideas are lumped together in one paragraph.
+            Text Formatting - Lists are not broken into bullet points, more than one space between words.
+        - **[2] Minor Issue(s)**: 
+            Grammar - Contains some spelling or grammar mistakes (<2).
+            Fluency - The writing is mostly fluent, but contains minor instances of non-native language.
+            Tone - May be misaligned with the prompt’s register and tone; may be unnatural or not conversational.
+            Structure - Tables might not be used where necessary.
+            Visual Presentation - The ideas covered in the response are visually separated into distinct text space.
+            Text Formatting - Lists are used when appropriate, including bolding where relevant. Key details may not be bolded.
+            Pleasantries - Text contains unnecessary pleasantries like "As an AI assistant" or "Certainly!".
+        - **[3] No Issues**: 
+            Grammar - Contains no grammar mistakes.
+            Fluency - The writing is perfectly fluent in the eyes of a native language speaker.
+            Preachiness - Response is NOT preachy, judgemental, or assume bad intent.
+            Tone - Response is aligned with the prompt’s register and tone; response is natural and conversational.
+            Structure - Tables are used when necessary.
+            Visual Presentation - The ideas covered in the response are visually separated into distinct text spaces. Whitespace is used intentionally with added effect.
+            Text Formatting - Lists are used when appropriate, including bolding where relevant. Key details are bolded.
+
+        #### 3. Truthfulness
+        - **[1] Major Issue(s)**: Primary claims (central to addressing the prompt) contain meaningful inaccuracies or are unfounded, making the response unhelpful to the user.
+        - **[2] Minor Issue(s)**: Primary claims are factual and accurate, but secondary claims (which provide additional details) contain inaccuracies or are unfounded.
+        - **[3] No Issues**: All claims are factually accurate based on reputable web evidence (e.g., trusted sources like major news outlets or scientific publications).
+        `,
+        placeholders: ['Enter your response', 'Enter model response']
     },
 ];
 
